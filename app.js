@@ -1,37 +1,14 @@
 var express = require('express');
 var path = require('path');
 //var favicon = require('static-favicon');
-var logger = require('morgan');
+//var logger = require('morgan');
 var cookieParser = require('cookie-parser');
-var session = require('express-session');
-var flash = require('connect-flash');
-
+var bodyParser = require('body-parser');
 
 var dbConfig = require('./db');
 var mongoose = require('mongoose');
 // Connect to DB
-
-mongoose.connect(dbConfig.url, { useNewUrlParser: true }).then(
-    () => { console.log() },
-    err => { console.log(err) }
-    );
-
-var User = require('./models/user');
-
-/*
-user = new User({name: "Max", password: "lol", email: "ravonta@yandex.ru", lastname: "sklyar"});
-user.save(function (err) {
-    if (err) return handleError(err);
-    // saved!
-});
-*/
-
-
-User.findOne({ name: 'Max' }, function (err, user) {
-    if (err) return handleError(err);
-    // Prints "Space Ghost is a talk show host".
-    console.log(user);
-});
+mongoose.connect(dbConfig.url);
 
 var app = express();
 
@@ -40,20 +17,24 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 //app.use(favicon());
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+//app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
 app.use(cookieParser());
-app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Configuring Passport
 var passport = require('passport');
+var expressSession = require('express-session');
 // TODO - Why Do we need this key ?
-app.use(session({secret: 'mySecretKey', resave: true, saveUninitialized: true}));
-
+app.use(expressSession({secret: 'mySecretKey'}));
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Using the flash middleware provided by connect-flash to store messages in session
+// and displaying in templates
+var flash = require('connect-flash');
+app.use(flash());
 
 // Initialize Passport
 var initPassport = require('./passport/init');
