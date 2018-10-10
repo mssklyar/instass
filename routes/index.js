@@ -16,8 +16,9 @@ module.exports = function(passport){
     /* GET login.js page. */
     router.get('/', function(req, res) {
         // Display the Login page with any flash message, if any
-        req.flash('success', 'message1');
-        res.locals.message = req.flash();
+        if(req.isAuthenticated()){
+            res.redirect('/home');
+        }
         res.render('index');
     });
 
