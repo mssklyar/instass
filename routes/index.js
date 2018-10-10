@@ -16,13 +16,13 @@ module.exports = function(passport){
     /* GET login.js page. */
     router.get('/', function(req, res) {
         // Display the Login page with any flash message, if any
-        req.flash('success', 'Registration successfully');
+        req.flash('success', 'message1');
         res.locals.message = req.flash();
         res.render('index');
     });
 
     /* Handle Login POST */
-    router.post('/login', passport.authenticate('login', {
+    router.post('/login', passport.authenticate('local', {
         successRedirect: '/home',
         failureRedirect: '/',
         failureFlash : true
@@ -30,7 +30,9 @@ module.exports = function(passport){
 
     /* GET Registration Page */
     router.get('/signup', function(req, res){
-        res.render('register',{message: req.flash('message')});
+        req.flash('success', 'message');
+        res.locals.message = req.flash();
+        res.render('register');
     });
 
     /* Handle Registration POST */
