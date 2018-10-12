@@ -4,6 +4,8 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var bb = require('express-busboy');
+
 
 var dbConfig = require('./db');
 var mongoose = require('mongoose');
@@ -41,7 +43,7 @@ var initPassport = require('./passport/init');
 initPassport(passport);
 
 app.use('/', require('./routes/index')(passport));
-require('./routes/account')(app);
+app.use('/account', require('./routes/account'));
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
