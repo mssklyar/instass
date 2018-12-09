@@ -1,7 +1,10 @@
 var express = require('express');
 var router = express.Router();
+var async = require('async');
 
 var Account = require('../models/account');
+var User = require('../models/user');
+
 
 var isAuthenticated = function (req, res, next) {
     // if user is authenticated in the session, call the next() to call the next request handler
@@ -29,10 +32,19 @@ router.post('/', (req, res) => {
     };
     Account.create(accountData, (err,account) => {
         if (err){
-            console.log('Error in Saving user: '+err);
+            console.log('Error in Saving account: '+err);
             throw err;
         }
-        res.redirect('/home');
+        User.findByIdAndUpdate(req.user._id,
+            {$push: {accounts: account._id}},
+            { "new": true, "upsert": true },
+            (err,user) => {
+                if (err){
+                    console.log('Error in Saving user: '+err);
+                    throw err;
+                }
+                res.redirect('/home');
+            })
     })
 });
 

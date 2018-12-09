@@ -3,6 +3,9 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
-    link(rel='stylesheet', href='http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
+    link(rel='stylesheet', href='http://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css')
   body
+    div.navbar.navbar-expand-lg.fixed-top.navbar-dark.bg-dark.shadow-sm
+      div.container.d-flex.justify-content-between
+        a(href='#', class='navbar-brand') Instass
     block content

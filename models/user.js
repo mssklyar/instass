@@ -8,5 +8,9 @@ module.exports = mongoose.model('User',{
     created: {
         type: Date,
         default: Date.now
-    }
+    },
+    accounts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'Account'
+    }]
 });

@@ -1,6 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
+var async = require('async');
+var Account = require('../models/account');
+
+
 var isAuthenticated = function (req, res, next) {
     // if user is authenticated in the session, call the next() to call the next request handler
     // Passport adds this method to request object. A middleware is allowed to add properties to
@@ -45,7 +49,19 @@ module.exports = function(passport){
 
     /* GET Home Page */
     router.get('/home', isAuthenticated, function(req, res){
-        res.render('home', { user: req.user });
+        let accounts = [];
+        async.eachLimit(req.user.accounts, 1, function(accountId, callback){
+            Account.findById(accountId, (err, account) => {
+                if (err){
+                    console.log('Error in Getting accounts: '+err);
+                    throw err;
+                }
+                accounts.push(account);
+                callback();
+            });
+        },function(){
+            res.render('home', { user: req.user, accounts: accounts });
+        });
     });
 
     /* Handle Logout */

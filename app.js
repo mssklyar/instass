@@ -10,7 +10,7 @@ var bb = require('express-busboy');
 var dbConfig = require('./db');
 var mongoose = require('mongoose');
 // Connect to DB
-mongoose.connect(dbConfig.url, { useNewUrlParser: true });
+mongoose.connect(dbConfig.url, { useNewUrlParser: true});
 
 var app = express();
 
